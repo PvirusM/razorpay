@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="col-6 mx-auto">
+
+    <div class="text-center mt-5">
+<img src="https://i.pinimg.com/474x/ce/18/89/ce18891c60315222f4971021f91cd85d.jpg" class="img-fluid img-responsive" style="height: 300px">
+    </div>
+
+
+    <form  method = "POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="Name">Enter Name</label>
+          <input type="name" name="name" class="form-control" id="Name" placeholder="Name">
+        </div>
+
+
+        <div class="form-group">
+            <label for="Email">Enter Email</label>
+            <input type="email" name="email" class="form-control" id="Email" placeholder="Email">
+          </div>
+
+
+        <div class="form-group">
+          <label for="Amount">Enter Amount</label>
+          <input type="number" name="amount" class="form-control" id="Amount" placeholder="Amount">
+        </div>
+
+
+        <button type="submit" class="btn btn-success btn-block">Submit</button>
+
+   
+</div>
+
+{% if payment %}
+
+<div class="text-center mt-2">
+    <button id="rzp-button1">Pay with Razorpay</button>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    </form>
+<script>
+var options = {
+    "key": "rzp_test_ihdu43wqO3rikQ", // Enter the Key ID generated from the Dashboard
+    "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Chai Corp",
+    "description": "Test Transaction",
+    "image": "https://i.pinimg.com/474x/ce/18/89/ce18891c60315222f4971021f91cd85d.jpg",
+    "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "/success/",
+    
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+{% endif %}
+
+{% endblock %}
